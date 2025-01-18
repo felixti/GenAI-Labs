@@ -1,0 +1,24 @@
+networks:
+  genAI:
+    driver: bridge
+
+services:
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    restart: unless-stopped
+    devices:
+      - "/dev/kfd"
+      - "/dev/dri"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      - HSA_OVERRIDE_GFX_VERSION=11.0.2
+      - OLLAMA_LLM_LIBRARY=rocm_v60000u_avx2
+    ports:
+      - "11434:11434"
+    dns:
+      - "8.8.8.8"
+
+volumes:
+  ollama_models:
